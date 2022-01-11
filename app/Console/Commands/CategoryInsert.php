@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\ImageController;
 use Throwable;
 use voku\helper\HtmlDomParser;
 use Illuminate\Console\Command;
@@ -48,7 +49,7 @@ class CategoryInsert extends Command
             // Ask the link:
             // $pageLink = $this->ask('Enter link ');
             $prodactRepository = new ProdactRepository();
-
+            $imgLocal = new ImageController;
             $pageLink = FacadesConfig::get('technosun.link');
             do
             {
@@ -78,29 +79,23 @@ class CategoryInsert extends Command
                 {
                     if (!$prodactRepository->exists($categoryList['link']))
                     {
+                        $imgLocal->localImage($categoryList['image']);
                         $prodactRepository->createProdact($categoryList);
                     }
 
 
                 }
 
-                $page = array();
 
-                foreach ($htmlLink -> find('ul.page-numbers') as $ulTag)
-                {
-                    foreach ($ulTag -> find('li') as $liTag)
-                    {
-                        $aTag = $liTag -> find('a.next.page-numbers' , 0);
-                        array_push($page , $aTag->href);
-                    }
-                    $pageLink = max($page);
-                }
+                $pageLink = $htmlLink->find('ul.page-numbers  li  a.next.page-numbers', 0)->href ;
+
+
 
 
 
             }while(!empty($pageLink));
 
-            $this->info('Prodacts Insert  Was  Success');
+            return $this->info('Prodacts Insert  Was  Success');
 
 
 

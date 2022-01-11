@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProdactRepository
 {
-    public function createProdact(array $data)
+    public function createProdact( $data)
     {
         return DB::table('prodacts')->insert([
 
